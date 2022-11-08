@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html lang="en">
+<head>
+<title>Product Details</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script
+src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script
+src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container">
+<h2>Product Details</h2>
+<form id="pForm" method="post">
+<div class="form-group">
+<span><label for="productId">Product ID:</label> <label id="productIdMsg">
+</label></span>
+<input type="text" class="form-control" name="productId" id="productId"
+placeholder="Enter Product ID" required>
+</div>
+<div class="form-group">
+<label for="productName">Product Name:</label>
+<input type="text" class="form-control" id="productName"
+placeholder="Enter Product Name" name="productName">
+</div>
+<div class="form-group">
+<label for="productCategory">Product Category:</label>
+<input type="text" class="form-control" id="productCategory"
+placeholder="Enter Product Category" name="productCategory">
+</div>
+<div class="form-group">
+<label for="productPrice">Price:</label>
+<input type="long" class="form-control" id="productPrice"
+placeholder="Enter Product Price" name="productPrice">
+</div>
+<div class="form-group">
+<label for="productMfg">Manufacturing State:</label>
+<input type="text" class="form-control" id="productMfg"
+placeholder="Enter Product Manufacturing State" name="productMfg">
+</div>
+<input type="button" class="btn btn-primary" id="pSave" value="Save"
+onclick="saveProduct();">
+</form>
+</div>
+<script>
+$("#productId").focus();
+function validateAndGetFormData() {
+var pIdVar = $("#productId").val();
+if (pIdVar === "") {
+alert("Product ID Required Value");
+$("#productId").focus();
+return "";
+}
+var pNameVar = $("#productName").val();
+if (pNameVar === "") {
+alert("Product Name is Required Value");
+$("#productName").focus();
+return "";
+}
+var pCategoryVar = $("#productCategory").val();
+if (pCategoryVar === "") {
+alert("Product Category is Required Value");
+$("#productCategory").focus();
+return "";
+}
+var pPriceVar = $("#productPrice").val();
+if (pPriceVar === "") {
+alert("Product Price is Required Value");
+$("#productPrice").focus();
+return "";
+}
+var pMfgVar = $("#productMfg").val();
+if (pMfgVar === "") {
+alert("Manufacturing State is Required Value");
+$("#productMfg").focus();
+return "";
+}
+var jsonStrObj = {
+productID: pIdVar,
+productName: pNameVar,
+productCategory: pCategoryVar,
+productPrice: pPriceVar,
+productMfg: pMfgVar,
+
+};
+return JSON.stringify(jsonStrObj);
+}
+// This method is used to create PUT Json request.
+function createPUTRequest(connToken, jsonObj, dbName, relName) {
+var putRequest = "{\n"
++ "\"token\" : \""
++ connToken
++ "\","
++ "\"dbName\": \""
++ dbName
++ "\",\n" + "\"cmd\" : \"PUT\",\n"
++ "\"rel\" : \""
++ relName + "\","
++ "\"jsonStr\": \n"
++ jsonObj
++ "\n"
++ "}";
+return putRequest;
+}
+function executeCommand(reqString, dbBaseUrl, apiEndPointUrl) {
+var url = dbBaseUrl + apiEndPointUrl;
+var jsonObj;
+$.post(url, reqString, function (result) {
+jsonObj = JSON.parse(result);
+}).fail(function (result) {
+var dataJsonObj = result.responseText;
+jsonObj = JSON.parse(dataJsonObj);
+});
+return jsonObj;
+}
+function resetForm() {
+$("#productId").val("")
+$("#productName").val("");
+$("#productCategory").val("");
+$("#productPrice").val("");
+$("#productMfg").val("");
+$("#productId").focus();
+}
+function saveProduct() {
+var jsonStr = validateAndGetFormData();
+if (jsonStr === "") {
+return;
+}
+var putReqStr = createPUTRequest("90937614|-31949269090140200|90952748",
+jsonStr, "Products", "PR-REL");
+alert(putReqStr);
+jQuery.ajaxSetup({async: false});
+var resultObj = executeCommand(putReqStr,
+"http://api.login2explore.com:5577", "/api/iml");
+alert(JSON.stringify(resultObj));
+jQuery.ajaxSetup({async: true});
+resetForm();
+}
+</script>
+</body>
+</html>
