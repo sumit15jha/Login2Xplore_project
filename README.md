@@ -11,7 +11,8 @@ This project I have created a database in which user will enter details of produ
 5 .It helps developers in faster coding, in-turn reduces development cost.
 
 **Release History (release of your JsonPowerDB related code on Github):**
-1st release: 8th November, 2022
+https://login2explore.com/jpdb/#collapse-jpdb-release-note17
+1st commit: 8th November, 2022
 
 **Table of contents**:
 -> productCategory
